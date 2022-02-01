@@ -111,7 +111,7 @@
             "value": "[parameters('myIpAddress')]"
           },
           "templateBaseUrl": {
-            "value": "[parameters('templateBaseUrl')]"
+            "value": "[variables('templateBaseUrl')]"
           },
           "virtualNetworkName": {
             "value": "[variables('virtualNetworkName')]"
