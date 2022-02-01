@@ -42,6 +42,7 @@
     },
     "templateBaseUrl": {
       "type": "string",
+      "defaultValue": "https://raw.githubusercontent.com/microsoft/azure_arc/main/azure_jumpstart_arcbox/",
       "metadata": {
         "description": "Base URL for ARM template"
       }

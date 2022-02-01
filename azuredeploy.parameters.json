@@ -19,9 +19,6 @@
         },
         "myIpAddress": {
             "value": "<your IP address>"
-        },
-        "templateBaseUrl": {
-            "value": "https://raw.githubusercontent.com/likamrat/spark-arc-data-svc/main/"
         }
     }
 }
