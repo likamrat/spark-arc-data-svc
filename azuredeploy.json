@@ -39,18 +39,12 @@
       "metadata": {
         "description": "Azure AD tenant id for your service principal"
       }
-    },
-    "templateBaseUrl": {
-      "type": "string",
-      "defaultValue": "https://raw.githubusercontent.com/microsoft/azure_arc/main/azure_jumpstart_arcbox/",
-      "metadata": {
-        "description": "Base URL for ARM template"
-      }
     }
   },
   "variables": {
-    "clientVmTemplateUrl": "[uri(parameters('templateBaseUrl'), 'clientVm.json')]",
-    "VNETUrl": "[uri(parameters('templateBaseUrl'), 'VNET.json')]",
+    "templateBaseUrl": "https://raw.githubusercontent.com/likamrat/spark-arc-data-svc/main/",
+    "clientVmTemplateUrl": "[uri(variables('templateBaseUrl'), 'clientVm.json')]",
+    "VNETUrl": "[uri(variables('templateBaseUrl'), 'VNET.json')]",
     // Virtual Network configuration
     "virtualNetworkName": "Arc-Data-VNet",
     "subnetName": "Arc-Data-Subnet",
