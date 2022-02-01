@@ -22,12 +22,6 @@
         "description": "IP address allowed SSH and RDP access to Azure resources. Usually this is your home or office public IP address."
       }
     },
-    "sshRSAPublicKey": {
-      "type": "securestring",
-      "metadata": {
-        "description": "RSA public key used for securing SSH access to Azure resources."
-      }
-    },
     "spnClientId": {
       "type": "string",
       "metadata": {
@@ -44,33 +38,6 @@
       "type": "string",
       "metadata": {
         "description": "Azure AD tenant id for your service principal"
-      }
-    },
-    "logAnalyticsWorkspaceName": {
-      "type": "string",
-      "metadata": {
-        "description": "Name for your log analytics workspace"
-      }
-    },
-    "deploySQLMI": {
-      "type": "bool",
-      "defaultValue": false,
-      "metadata": {
-        "description": "SQL Managed Instance deployment"
-      }
-    },
-    "SQLMIHA": {
-      "type": "bool",
-      "defaultValue": false,
-      "metadata": {
-        "description": "SQL Managed Instance high-availability deployment"
-      }
-    },    
-    "deployPostgreSQL": {
-      "type": "bool",
-      "defaultValue": false,
-      "metadata": {
-        "description": "PostgreSQL Hyperscale deployment"
       }
     },
     "templateBaseUrl": {
