@@ -122,7 +122,7 @@
       "comments": "Deploys the Client Windows VM",
       "apiVersion": "2019-10-01",
       "name": "clientVmDeployment",
-      "dependsOn": ["stagingStorageAccountDeployment", "VNETDeployment"],
+      "dependsOn": ["VNETDeployment"],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -156,37 +156,6 @@
           },
           "subnetName": {
             "value": "[variables('subnetName')]"
-          }
-        }
-      }
-    },
-    {
-      "type": "Microsoft.Resources/deployments",
-      "comments": "Storage Account used for staging kubectl config and staging scripts",
-      "apiVersion": "2019-10-01",
-      "name": "stagingStorageAccountDeployment",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('mgmtStagingStorageUrl')]",
-          "contentVersion": "1.0.0.0"
-        }
-      }
-    },
-    {
-      "type": "Microsoft.Resources/deployments",
-      "comments": "Deploys Azure Log Analytics workspace to support Azure Arc enabled data services logs upload",
-      "apiVersion": "2019-10-01",
-      "name": "logAnalyticsDeployment",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('logAnalyticsUrl')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "workspaceName": {
-            "value": "[parameters('logAnalyticsWorkspaceName')]"
           }
         }
       }
