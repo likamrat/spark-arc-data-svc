@@ -20,11 +20,8 @@
         "myIpAddress": {
             "value": "<your IP address>"
         },
-        "logAnalyticsWorkspaceName": {
-            "value": "<your unique Log Analytics workspace name>"
-        },
         "templateBaseUrl": {
-            "value": "https://raw.githubusercontent.com/microsoft/azure_arc/main/azure_arc_data_jumpstart/cluster_api/capi_azure/arm_template/"
+            "value": "https://raw.githubusercontent.com/likamrat/spark-arc-data-svc/main/"
         }
     }
 }
