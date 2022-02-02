@@ -52,7 +52,7 @@ Resize-Partition -DriveLetter C -Size $(Get-PartitionSupportedSize -DriveLetter 
 
 # Downloading GitHub artifacts for DataServicesLogonScript.ps1
 Invoke-WebRequest "https://github.com/ErikEJ/SqlQueryStress/releases/download/102/SqlQueryStress.zip" -OutFile "C:\Temp\SqlQueryStress.zip"
-Invoke-WebRequest "https://raw.githubusercontent.com/microsoft/azure_arc/main/img/jumpstart_wallpaper.png" -OutFile "C:\Temp\wallpaper.png"
+Invoke-WebRequest "https://raw.githubusercontent.com/likamrat/spark-arc-data-svc/main/artifacts/jumpstart_wallpaper.png" -OutFile "C:\Temp\wallpaper.png"
 
 # Installing tools
 workflow ClientTools_01

@@ -1,40 +1,46 @@
 Start-Transcript -Path C:\Temp\DataServicesLogonScript.log
 
-$connectedClusterName = "Arc-Data-CAPI"
-
 Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 
-# # Required for azcopy
-# $azurePassword = ConvertTo-SecureString $env:spnClientSecret -AsPlainText -Force
-# $psCred = New-Object System.Management.Automation.PSCredential($env:spnClientId , $azurePassword)
-# Connect-AzAccount -Credential $psCred -TenantId $env:spnTenantId -ServicePrincipal
-
 # Login as service principal
-az login --service-principal --username $env:spnClientId --password $env:spnClientSecret --tenant $env:spnTenantId
+az login --service-principal --username $Env:spnClientId --password $Env:spnClientSecret --tenant $Env:spnTenantId
 
 # Set default subscription to run commands against
 # "subscriptionId" value comes from clientVM.json ARM template, based on which 
 # subscription user deployed ARM template to. This is needed in case Service 
 # Principal has access to multiple subscriptions, which can break the automation logic
-az account set --subscription $env:subscriptionId
-
+az account set --subscription $Env:subscriptionId
 
 # Install Azure Data Studio extensions
 Write-Host "`n"
 Write-Host "Installing Azure Data Studio Extensions"
 Write-Host "`n"
-$env:argument1="--install-extension"
-$env:argument2="Microsoft.arc"
-$env:argument3="microsoft.azuredatastudio-postgresql"
-& "C:\Program Files\Azure Data Studio\bin\azuredatastudio.cmd" $env:argument1 $env:argument2
-& "C:\Program Files\Azure Data Studio\bin\azuredatastudio.cmd" $env:argument1 $env:argument3
+$Env:argument1="--install-extension"
+$Env:argument2="Microsoft.arc"
+$Env:argument3="microsoft.azuredatastudio-postgresql"
+& "C:\Program Files\Azure Data Studio\bin\azuredatastudio.cmd" $Env:argument1 $Env:argument2
+& "C:\Program Files\Azure Data Studio\bin\azuredatastudio.cmd" $Env:argument1 $Env:argument3
 
 # Create Azure Data Studio desktop shortcut
 Write-Host "`n"
 Write-Host "Creating Azure Data Studio Desktop shortcut"
 Write-Host "`n"
 $TargetFile = "C:\Program Files\Azure Data Studio\azuredatastudio.exe"
-$ShortcutFile = "C:\Users\$env:adminUsername\Desktop\Azure Data Studio.lnk"
+$ShortcutFile = "C:\Users\$Env:adminUsername\Desktop\Azure Data Studio.lnk"
+$WScriptShell = New-Object -ComObject WScript.Shell
+$Shortcut = $WScriptShell.CreateShortcut($ShortcutFile)
+$Shortcut.TargetPath = $TargetFile
+$Shortcut.Save()
+
+# Unzip SqlQueryStress
+Expand-Archive -Path C:\Temp\SqlQueryStress.zip -DestinationPath C:\Temp\SqlQueryStress
+
+# Create SQLQueryStress desktop shortcut
+Write-Host "`n"
+Write-Host "Creating SQLQueryStress Desktop shortcut"
+Write-Host "`n"
+$TargetFile = "C:\Temp\SqlQueryStress\SqlQueryStress.exe"
+$ShortcutFile = "C:\Users\$env:adminUsername\Desktop\SqlQueryStress.lnk"
 $WScriptShell = New-Object -ComObject WScript.Shell
 $Shortcut = $WScriptShell.CreateShortcut($ShortcutFile)
 $Shortcut.TargetPath = $TargetFile
@@ -57,9 +63,17 @@ Write-Host "`n"
 az provider show --namespace Microsoft.AzureArcData -o table
 Write-Host "`n"
 
-# Adding Azure Arc CLI extensions
-Write-Host "Adding Azure Arc CLI extensions"
+# Installing Azure Arc CLI extensions
+Write-Host "Installing Azure Arc CLI extensions"
+Write-Host "`n"
 az config set extension.use_dynamic_install=yes_without_prompt
+az extension add --name "connectedk8s" -y
+az extension add --name "k8s-extension" -y
+az extension add --name "customlocation" -y
+az extension add --name "arcdata" -y
+
+Write-Host "`n"
+az -v
 
 Write-Host "`n"
 az -v
@@ -83,9 +97,6 @@ namespace Win32{
 
 add-type $code 
 [Win32.Wallpaper]::SetWallpaper($imgPath)
-
-# Kill the open PowerShell monitoring kubectl get pods
-Stop-Process -Id $kubectlMonShell.Id
 
 # Removing the LogonScript Scheduled Task so it won't run on next reboot
 Unregister-ScheduledTask -TaskName "DataServicesLogonScript" -Confirm:$false
