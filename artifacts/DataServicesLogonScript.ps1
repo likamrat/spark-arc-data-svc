@@ -40,7 +40,7 @@ Write-Host "`n"
 Write-Host "Creating SQLQueryStress Desktop shortcut"
 Write-Host "`n"
 $TargetFile = "C:\Temp\SqlQueryStress\SqlQueryStress.exe"
-$ShortcutFile = "C:\Users\$env:adminUsername\Desktop\SqlQueryStress.lnk"
+$ShortcutFile = "C:\Users\$Env:adminUsername\Desktop\SqlQueryStress.lnk"
 $WScriptShell = New-Object -ComObject WScript.Shell
 $Shortcut = $WScriptShell.CreateShortcut($ShortcutFile)
 $Shortcut.TargetPath = $TargetFile
@@ -71,9 +71,6 @@ az extension add --name "connectedk8s" -y
 az extension add --name "k8s-extension" -y
 az extension add --name "customlocation" -y
 az extension add --name "arcdata" -y
-
-Write-Host "`n"
-az -v
 
 Write-Host "`n"
 az -v
