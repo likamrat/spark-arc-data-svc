@@ -43,8 +43,8 @@
   },
   "variables": {
     "templateBaseUrl": "https://raw.githubusercontent.com/likamrat/spark-arc-data-svc/main/",
-    "clientVmTemplateUrl": "[uri(variables('templateBaseUrl'), 'clientVm.json')]",
-    "VNETUrl": "[uri(variables('templateBaseUrl'), 'VNET.json')]",
+    "clientVmTemplateUrl": "[uri(variables('templateBaseUrl'), 'ARM/clientVm.json')]",
+    "VNETUrl": "[uri(variables('templateBaseUrl'), 'ARM/VNET.json')]",
     // Virtual Network configuration
     "virtualNetworkName": "Arc-Data-VNet",
     "subnetName": "Arc-Data-Subnet",
