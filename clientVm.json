@@ -101,47 +101,10 @@
         "description": "Tenant id of the service principal"
       }
     },
-    "azdataUsername": {
-      "type": "string",
-      "defaultValue": "arcdemo"
-    },
-    "azdataPassword": {
-      "type": "securestring",
-      "defaultValue": "ArcPassword123!!"
-    },
-    "acceptEula": {
-      "type": "string",
-      "defaultValue": "yes"
-    },
-    "arcDcName": {
-      "type": "string",
-      "defaultValue": "arcdatactrl"
-    },
     "workspaceName": {
       "type": "string",
       "metadata": {
         "description": "Name for the environment Azure Log Analytics workspace"
-      }
-    },
-    "deploySQLMI": {
-      "type": "bool",
-      "defaultValue": false,
-      "metadata": {
-        "description": "SQL Managed Instance deployment"
-      }
-    },
-    "SQLMIHA": {
-      "type": "bool",
-      "defaultValue": false,
-      "metadata": {
-        "description": "SQL Managed Instance high-availability deployment"
-      }
-    },    
-    "deployPostgreSQL": {
-      "type": "bool",
-      "defaultValue": false,
-      "metadata": {
-        "description": "PostgreSQL Hyperscale deployment"
       }
     },
     "templateBaseUrl": {
