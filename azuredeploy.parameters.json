@@ -25,24 +25,6 @@
     },
     "logAnalyticsWorkspaceName": {
       "value": "<your unique Log Analytics workspace name>"
-    },
-    "deploySQLMI": {
-      "value": "<SQL Managed Instance deployment (true/false)>"
-    },
-    "SQLMIHA": {
-      "value": "<SQL Managed Instance high-availability deployment (true/false)>"
-    },
-    "deployPostgreSQL": {
-      "value": "<PostgreSQL Hyperscale deployment (true/false)>"
-    },
-    "templateBaseUrl": {
-      "value": "https://raw.githubusercontent.com/microsoft/azure_arc/main/azure_arc_data_jumpstart/aks/arm_template/"
-    },
-    "kubernetesVersion": {
-      "value": "1.21.2"
-    },
-    "dnsPrefix": {
-      "value": "arcdata"
     }
   }
 }
