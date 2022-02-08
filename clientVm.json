@@ -101,14 +101,60 @@
         "description": "Tenant id of the service principal"
       }
     },
+    "azdataUsername": {
+      "type": "string",
+      "defaultValue": "arcdemo"
+    },
+    "azdataPassword": {
+      "type": "securestring",
+      "defaultValue": "ArcPassword123!!"
+    },
     "acceptEula": {
       "type": "string",
       "defaultValue": "yes"
+    },
+    "arcDcName": {
+      "type": "string",
+      "defaultValue": "arcdatactrl"
+    },
+    "workspaceName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name for the environment Azure Log Analytics workspace"
+      }
+    },
+    "deploySQLMI": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "SQL Managed Instance deployment"
+      }
+    },
+    "SQLMIHA": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "SQL Managed Instance high-availability deployment"
+      }
+    },    
+    "deployPostgreSQL": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "PostgreSQL Hyperscale deployment"
+      }
     },
     "templateBaseUrl": {
       "type": "string",
       "metadata": {
         "description": "Base URL for ARM template"
+      }
+    },
+    "clusterName": {
+      "type": "string",
+      "defaultValue": "Arc-Data-AKS",
+      "metadata": {
+        "description": "The name of the Kubernetes cluster resource."
       }
     }
   },
@@ -255,7 +301,7 @@
           "fileUris": [
             "[uri(parameters('templateBaseUrl'), 'artifacts/Bootstrap.ps1')]"
           ],
-          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Bypass -File Bootstrap.ps1', ' -adminUsername ', parameters('windowsAdminUsername'), ' -spnClientId ', parameters('spnClientId'), ' -spnClientSecret ', parameters('spnClientSecret'), ' -spnTenantId ', parameters('spnTenantId'), ' -spnAuthority ', parameters('spnAuthority'), ' -subscriptionId ', subscription().subscriptionId, ' -resourceGroup ', resourceGroup().name, ' -acceptEula ', parameters('acceptEula'), ' -azureLocation ', parameters('location'), ' -templateBaseUrl ', parameters('templateBaseUrl'))]"
+          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Bypass -File Bootstrap.ps1', ' -adminUsername ', parameters('windowsAdminUsername'), ' -spnClientId ', parameters('spnClientId'), ' -spnClientSecret ', parameters('spnClientSecret'), ' -spnTenantId ', parameters('spnTenantId'), ' -spnAuthority ', parameters('spnAuthority'), ' -subscriptionId ', subscription().subscriptionId, ' -resourceGroup ', resourceGroup().name, ' -azdataUsername ', parameters('azdataUsername'), ' -azdataPassword ', parameters('azdataPassword'), ' -acceptEula ', parameters('acceptEula'), ' -arcDcName ', parameters('arcDcName'), ' -azureLocation ', parameters('location'), ' -workspaceName ', parameters('workspaceName'), ' -deploySQLMI ', parameters('deploySQLMI'), ' -SQLMIHA ', parameters('SQLMIHA'), ' -deployPostgreSQL ', parameters('deployPostgreSQL'),  ' -clusterName ', parameters('clusterName'), ' -templateBaseUrl ', parameters('templateBaseUrl'))]"
         }
       }
     }

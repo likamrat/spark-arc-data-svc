@@ -22,6 +22,12 @@
         "description": "IP address allowed SSH and RDP access to Azure resources. Usually this is your home or office public IP address."
       }
     },
+    "sshRSAPublicKey": {
+      "type": "securestring",
+      "metadata": {
+        "description": "RSA public key used for securing SSH access to Azure resources."
+      }
+    },
     "spnClientId": {
       "type": "string",
       "metadata": {
@@ -39,12 +45,66 @@
       "metadata": {
         "description": "Azure AD tenant id for your service principal"
       }
+    },
+    "logAnalyticsWorkspaceName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name for your log analytics workspace"
+      }
+    },
+    "kubernetesVersion": {
+      "defaultValue": "1.21.2",
+      "type": "string",
+      "metadata": {
+        "description": "The version of Kubernetes."
+      }
+    },
+    "clusterName": {
+      "type": "string",
+      "defaultValue": "Arc-Data-AKS",
+      "metadata": {
+        "description": "The name of the Kubernetes cluster resource."
+      }
+    },
+    "dnsPrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
+      }
+    },
+    "deploySQLMI": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "SQL Managed Instance deployment"
+      }
+    },
+    "SQLMIHA": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "SQL Managed Instance high-availability deployment"
+      }
+    },    
+    "deployPostgreSQL": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "PostgreSQL Hyperscale deployment"
+      }
+    },
+    "templateBaseUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "Base URL for ARM template"
+      }
     }
   },
   "variables": {
-    "templateBaseUrl": "https://raw.githubusercontent.com/likamrat/spark-arc-data-svc/main/",
-    "clientVmTemplateUrl": "[uri(variables('templateBaseUrl'), 'ARM/clientVm.json')]",
-    "VNETUrl": "[uri(variables('templateBaseUrl'), 'ARM/VNET.json')]",
+    "clientVmTemplateUrl": "[uri(parameters('templateBaseUrl'), 'clientVm.json')]",
+    "aksTemplateUrl": "[uri(parameters('templateBaseUrl'), 'aks.json')]",
+    "logAnalyticsUrl": "[uri(parameters('templateBaseUrl'), 'logAnalytics.json')]",
+    "VNETUrl": "[uri(parameters('templateBaseUrl'), 'VNET.json')]",
     // Virtual Network configuration
     "virtualNetworkName": "Arc-Data-VNet",
     "subnetName": "Arc-Data-Subnet",
@@ -54,7 +114,7 @@
   "resources": [
     {
       "type": "Microsoft.Resources/deployments",
-      "comments": "Deploys a VNET and Subnet for Client and K8s VM",
+      "comments": "Deploys a VNET and Subnet for Client VM",
       "apiVersion": "2019-10-01",
       "name": "VNETDeployment",
       "properties": {
@@ -75,6 +135,36 @@
           },
           "subnetAddressPrefix": {
             "value": "[variables('subnetAddressPrefix')]"
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "comments": "Deploys an AKS Cluster",
+      "apiVersion": "2019-10-01",
+      "name": "aksDeployment",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('aksTemplateUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "sshRSAPublicKey": {
+            "value": "[parameters('sshRSAPublicKey')]"
+          },
+          "spnClientId": {
+            "value": "[parameters('spnClientId')]"
+          },
+          "spnClientSecret": {
+            "value": "[parameters('spnClientSecret')]"
+          },
+          "kubernetesVersion": {
+            "value": "[parameters('kubernetesVersion')]"
+          },
+          "dnsPrefix": {
+            "value": "[parameters('dnsPrefix')]"
           }
         }
       }
@@ -110,14 +200,47 @@
           "myIpAddress": {
             "value": "[parameters('myIpAddress')]"
           },
+          "workspaceName": {
+            "value": "[parameters('logAnalyticsWorkspaceName')]"
+          },
+          "clusterName": {
+            "value": "[parameters('clusterName')]"
+          },
           "templateBaseUrl": {
-            "value": "[variables('templateBaseUrl')]"
+            "value": "[parameters('templateBaseUrl')]"
           },
           "virtualNetworkName": {
             "value": "[variables('virtualNetworkName')]"
           },
           "subnetName": {
             "value": "[variables('subnetName')]"
+          },
+          "deploySQLMI": {
+            "value": "[parameters('deploySQLMI')]"
+          },
+          "SQLMIHA": {
+            "value": "[parameters('SQLMIHA')]"
+          },
+          "deployPostgreSQL": {
+            "value": "[parameters('deployPostgreSQL')]"
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "comments": "Deploys Azure Log Analytics workspace to support Azure Arc enabled data services logs upload",
+      "apiVersion": "2019-10-01",
+      "name": "logAnalyticsDeployment",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('logAnalyticsUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "workspaceName": {
+            "value": "[parameters('logAnalyticsWorkspaceName')]"
           }
         }
       }
