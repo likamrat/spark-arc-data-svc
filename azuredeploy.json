@@ -68,6 +68,7 @@
     },
     "dnsPrefix": {
       "type": "string",
+      "defaultValue": "arcdata",
       "metadata": {
         "description": "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
       }
@@ -193,15 +194,6 @@
           },
           "subnetName": {
             "value": "[variables('subnetName')]"
-          },
-          "deploySQLMI": {
-            "value": "[parameters('deploySQLMI')]"
-          },
-          "SQLMIHA": {
-            "value": "[parameters('SQLMIHA')]"
-          },
-          "deployPostgreSQL": {
-            "value": "[parameters('deployPostgreSQL')]"
           }
         }
       }
