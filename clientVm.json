@@ -109,6 +109,7 @@
     },
     "templateBaseUrl": {
       "type": "string",
+      "defaultValue": "https://raw.githubusercontent.com/likamrat/spark-arc-data-svc/main/azuredeploy.json",
       "metadata": {
         "description": "Base URL for ARM template"
       }
