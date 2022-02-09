@@ -1,39 +1,33 @@
 Start-Transcript -Path C:\Temp\DataServicesLogonScript.log
 
-# Write-Host "Installing SQL Server and PowerShell Module"
-# Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-# If(-not(Get-InstalledModule SQLServer -ErrorAction silentlycontinue)){
-#     Install-Module SQLServer -Confirm:$False -Force
-# }
-
 # Deployment environment variables
 $connectedClusterName = "Arc-Data-AKS"
 
 Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 
 # Login as service principal
-az login --service-principal --username $env:spnClientId --password $env:spnClientSecret --tenant $env:spnTenantId
+az login --service-principal --username $Env:spnClientId --password $Env:spnClientSecret --tenant $Env:spnTenantId
 
 # Set default subscription to run commands against
 # "subscriptionId" value comes from clientVM.json ARM template, based on which 
 # subscription user deployed ARM template to. This is needed in case Service 
 # Principal has access to multiple subscriptions, which can break the automation logic
-az account set --subscription $env:subscriptionId
+az account set --subscription $Env:subscriptionId
 
 Write-Host "Installing Azure Data Studio Extensions"
 Write-Host "`n"
 
-$env:argument1="--install-extension"
-$env:argument2="Microsoft.arc"
-$env:argument3="microsoft.azuredatastudio-postgresql"
+$Env:argument1="--install-extension"
+$Env:argument2="Microsoft.arc"
+$Env:argument3="microsoft.azuredatastudio-postgresql"
 
-& "C:\Program Files\Azure Data Studio\bin\azuredatastudio.cmd" $env:argument1 $env:argument2
-& "C:\Program Files\Azure Data Studio\bin\azuredatastudio.cmd" $env:argument1 $env:argument3
+& "C:\Program Files\Azure Data Studio\bin\azuredatastudio.cmd" $Env:argument1 $Env:argument2
+& "C:\Program Files\Azure Data Studio\bin\azuredatastudio.cmd" $Env:argument1 $Env:argument3
 
 Write-Host "Creating Azure Data Studio Desktop shortcut"
 Write-Host "`n"
 $TargetFile = "C:\Program Files\Azure Data Studio\azuredatastudio.exe"
-$ShortcutFile = "C:\Users\$env:adminUsername\Desktop\Azure Data Studio.lnk"
+$ShortcutFile = "C:\Users\$Env:adminUsername\Desktop\Azure Data Studio.lnk"
 $WScriptShell = New-Object -ComObject WScript.Shell
 $Shortcut = $WScriptShell.CreateShortcut($ShortcutFile)
 $Shortcut.TargetPath = $TargetFile
@@ -71,8 +65,8 @@ az -v
 # Getting AKS cluster credentials kubeconfig file
 Write-Host "Getting AKS cluster credentials"
 Write-Host "`n"
-az aks get-credentials --resource-group $env:resourceGroup `
-                       --name $env:clusterName --admin
+az aks get-credentials --resource-group $Env:resourceGroup `
+                       --name $Env:clusterName --admin
 
 Write-Host "Checking kubernetes nodes"
 Write-Host "`n"
@@ -87,16 +81,16 @@ Write-Host "`n"
 $kubectlMonShell = Start-Process -PassThru PowerShell {for (0 -lt 1) {kubectl get pod -n arc; Start-Sleep -Seconds 5; Clear-Host }}
 
 # Localize kubeconfig
-$env:KUBECONTEXT = kubectl config current-context
-$env:KUBECONFIG = "C:\Users\$env:adminUsername\.kube\config"
+$Env:KUBECONTEXT = kubectl config current-context
+$Env:KUBECONFIG = "C:\Users\$Env:adminUsername\.kube\config"
 
 # Create Kubernetes - Azure Arc Cluster
 az connectedk8s connect --name $connectedClusterName `
-                        --resource-group $env:resourceGroup `
-                        --location $env:azureLocation `
+                        --resource-group $Env:resourceGroup `
+                        --location $Env:azureLocation `
                         --tags 'Project=jumpstart_azure_arc_data_services' `
-                        --kube-config $env:KUBECONFIG `
-                        --kube-context $env:KUBECONTEXT
+                        --kube-config $Env:KUBECONFIG `
+                        --kube-context $Env:KUBECONTEXT
 
 Start-Sleep -Seconds 10
 
@@ -105,7 +99,7 @@ az k8s-extension create --name arc-data-services `
                         --extension-type microsoft.arcdataservices `
                         --cluster-type connectedClusters `
                         --cluster-name $connectedClusterName `
-                        --resource-group $env:resourceGroup `
+                        --resource-group $Env:resourceGroup `
                         --auto-upgrade false `
                         --scope cluster `
                         --release-namespace arc `
@@ -117,22 +111,22 @@ Do {
     $podStatus = $(if(kubectl get pods -n arc | Select-String "bootstrapper" | Select-String "Running" -Quiet){"Ready!"}Else{"Nope"})
     } while ($podStatus -eq "Nope")
 
-$connectedClusterId = az connectedk8s show --name $connectedClusterName --resource-group $env:resourceGroup --query id -o tsv
+$connectedClusterId = az connectedk8s show --name $connectedClusterName --resource-group $Env:resourceGroup --query id -o tsv
 
 $extensionId = az k8s-extension show --name arc-data-services `
                                      --cluster-type connectedClusters `
-                                     --cluster-name $connectedClusterName ` --resource-group $env:resourceGroup `
+                                     --cluster-name $connectedClusterName ` --resource-group $Env:resourceGroup `
                                      --query id -o tsv
 
 Start-Sleep -Seconds 20
 
 # Create Custom Location
 az customlocation create --name 'jumpstart-cl' `
-                         --resource-group $env:resourceGroup `
+                         --resource-group $Env:resourceGroup `
                          --namespace arc `
                          --host-resource-id $connectedClusterId `
                          --cluster-extension-ids $extensionId `
-                         --kubeconfig $env:KUBECONFIG
+                         --kubeconfig $Env:KUBECONFIG
 
 # Changing to Client VM wallpaper
 $imgPath="C:\Temp\wallpaper.png"

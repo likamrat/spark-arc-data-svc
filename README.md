@@ -2,7 +2,7 @@
 
 The following README will guide you on how to automatically deploy a sandbox environment for use with the Microsoft SPARK "Implement Azure Arc-enabled data services" training. In addition, the guide include the manual steps to deploy Azure Arc-enabled data services, which will be performed throughout the training.
 
-By the end of the automated portion of this guide, you will have a vanilla AKS cluster deployed alongside a Microsoft Windows Server 2022 (Datacenter) Azure VM, installed & pre-configured with all the required tools needed to work with Azure Arc-enabled data services.
+By the end of the automated portion of this guide, you will have a vanilla Azure Kubernetes Service (AKS) cluster deployed alongside a Microsoft Windows Server 2022 (Datacenter) Azure VM, installed & pre-configured with all the required tools needed to work with Azure Arc-enabled data services.
 
 ## Prerequisites
 
@@ -90,12 +90,22 @@ As mentioned, this deployment will leverage ARM templates. You will deploy a sin
 
 Click the <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Flikamrat%2Fspark-arc-data-svc%2Fmain%2Fazuredeploy.json" target="_blank"><img src="https://aka.ms/deploytoazurebutton"/></a> button and enter values for the the ARM template parameters.
 
+![Screenshot showing custom deployment parameters](./img/custom_deployment.png)
 
+![Screenshot showing custom deployment in progress](./img/custom_deployment_progress.png)
+
+![Screenshot showing custom deployment completed](./img/custom_deployment_completed.png)
 ### Deployment Option 2: ARM template with Azure CLI
 
 > **NOTE: Do not use Azure Cloud Shell for this deployment option as it relies on your local public IP address.**
 
-- The deployment is using the ARM template parameters file. Before initiating the deployment, edit the [_azuredeploy.parameters.json_](https://github.com/microsoft/azure_arc/blob/main/azure_arc_data_jumpstart/aks/arm_template/azuredeploy.parameters.json) file located in your local cloned repository folder. An example parameters file is located [here](https://github.com/microsoft/azure_arc/blob/main/azure_arc_data_jumpstart/aks/arm_template/artifacts/azuredeploy.parameters.example.json).
+- Clone the SPARK workshop GitHub repository
+
+    ```shell
+    git clone https://github.com/likamrat/spark-arc-data-svc.git
+    ```
+
+- The deployment is using the ARM template parameters file. Before initiating the deployment, edit the [_azuredeploy.parameters.json_](https://github.com/likamrat/spark-arc-data-svc/blob/main/azuredeploy.json) file located in your local cloned repository folder.
 
   - `sshRSAPublicKey` - Your SSH public key
   - `spnClientId` - Your Azure service principal id
@@ -105,16 +115,15 @@ Click the <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https
   - `windowsAdminPassword` - Client Windows VM Password. Password must have 3 of the following: 1 lower case character, 1 upper case character, 1 number, and 1 special character. The value must be between 12 and 123 characters long.
   - `myIpAddress` - Your local public IP address. This is used to allow remote RDP and SSH connections to the client Windows VM and AKS cluster. If you don't know your public IP, you can find it [here](https://www.whatismyip.com/).
   - `logAnalyticsWorkspaceName` - Unique name for the deployment log analytics workspace.
-  - `dnsPrefix` - AKS unique DNS prefix
 
-- To deploy the ARM template, navigate to the local cloned [deployment folder](https://github.com/microsoft/azure_arc/blob/main/azure_arc_data_jumpstart/aks/arm_template) and run the below command:
+- To deploy the ARM template, navigate to the local cloned [deployment folder](https://github.com/likamrat/spark-arc-data-svc) and run the below command:
 
     ```shell
     az group create --name <Name of the Azure resource group> --location <Azure Region>
     az deployment group create \
     --resource-group <Name of the Azure resource group> \
     --name <The name of this deployment> \
-    --template-uri https://raw.githubusercontent.com/microsoft/azure_arc/main/azure_arc_data_jumpstart/aks/arm_template/azuredeploy.json \
+    --template-uri https://raw.githubusercontent.com/likamrat/spark-arc-data-svc/main/azuredeploy.json \
     --parameters <The *azuredeploy.parameters.json* parameters file location>
     ```
 
@@ -123,21 +132,52 @@ Click the <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https
     For example:
 
     ```shell
-    az group create --name Arc-Data-Demo --location "East US"
+    az group create --name Arc-Data-SPARK --location "East US"
     az deployment group create \
-    --resource-group Arc-Data-Demo \
+    --resource-group Arc-Data-SPARK \
     --name arcdata \
-    --template-uri https://raw.githubusercontent.com/microsoft/azure_arc/main/azure_arc_data_jumpstart/aks/arm_template/azuredeploy.json \
+    --template-uri https://raw.githubusercontent.com/likamrat/spark-arc-data-svc/main/azuredeploy.json \
     --parameters azuredeploy.parameters.json
-    --parameters templateBaseUrl="https://raw.githubusercontent.com/your--github--handle/azure_arc/main/azure_arc_data_jumpstart/aks/arm_template/"
     ```
 
     > **NOTE: The deployment time for this scenario can take ~15-20min**
 
+- Once Azure resources has been provisioned, you will be able to see it in Azure portal. At this point, the resource group should have 8 various Azure resources deployed.
 
+    ![Screenshot showing Azure resource group after deployment completed](./img/pre_resource_group.png)
 
+### Windows Login & Post Deployment
 
+- Now that first phase of the automation is completed, it is time to RDP to the _Arc-Data-Client_ virtual machine using it's public IP.
 
+    ![Screenshot showing the Arc-Data-Client virtual machine public IP](./img/vm_public_ip.png)
 
+    ![Screenshot showing the RDP client](./img/rdp_client.png)
 
+- Let the script to run its course and do not close the PowerShell session, this will be done for you once completed. Once the script will finish it's run, the logon script PowerShell session will be closed and the Windows wallpaper will change.
 
+    ![Screenshot showing post automation scripts](./img/post_automation_01.png)
+
+    ![Screenshot showing post automation scripts](./img/post_automation_02.png)
+
+    ![Screenshot showing post automation scripts](./img/post_automation_03.png)
+
+    ![Screenshot showing post automation scripts](./img/post_automation_04.png)
+
+    ![Screenshot showing ready desktop](./img/ready_desktop.png)
+
+- Upon successful script run, the AKS cluster will get onboarded as an Azure Arc-enabled Kubernetes cluster a new Custom Location will be created. Both of these resource are required for the rest of the workshop.
+
+    ![Screenshot showing Azure Arc-enabled Kubernetes cluster and Custom Location](./img/arc_enabled.png)
+
+- In this scenario, the Azure Arc-enabled data services cluster extension was deployed and will be used throughout this workshop in order to deploy the data services infrastructure.
+
+    ![Screenshot showing Azure Arc-enabled Kubernetes extensions](./img/extensions.png)
+
+    ![Screenshot showing Azure Arc-enabled data services extension](./img/data_svc_extension.png)
+
+## Cleanup
+
+If you want to delete the entire environment, simply delete the deployment resource group from the Azure portal.
+
+![Screenshot showing resource group deletion](./img/delete_resource_group.png)
