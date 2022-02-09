@@ -25,6 +25,9 @@
     },
     "logAnalyticsWorkspaceName": {
       "value": "<your unique Log Analytics workspace name>"
+    },
+    "templateBaseUrl": {
+      "value": "https://raw.githubusercontent.com/likamrat/spark-arc-data-svc/main/azuredeploy.json"
     }
   }
 }
