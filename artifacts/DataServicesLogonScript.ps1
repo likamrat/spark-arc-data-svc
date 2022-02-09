@@ -56,9 +56,14 @@ Write-Host "`n"
 az provider show --namespace Microsoft.AzureArcData -o table
 Write-Host "`n"
 
-# Adding Azure Arc CLI extensions
-Write-Host "Adding Azure Arc CLI extensions"
+# Installing Azure Arc CLI extensions
+Write-Host "Installing Azure Arc CLI extensions"
+Write-Host "`n"
 az config set extension.use_dynamic_install=yes_without_prompt
+az extension add --name "connectedk8s" -y
+az extension add --name "k8s-extension" -y
+az extension add --name "customlocation" -y
+az extension add --name "arcdata" -y
 
 Write-Host "`n"
 az -v
