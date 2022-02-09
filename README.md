@@ -176,6 +176,23 @@ Click the <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https
 
     ![Screenshot showing Azure Arc-enabled data services extension](./img/data_svc_extension.png)
 
+## Included environment variables
+
+To help speed things up, as part of the automation, the below environment variables were infused to the Windows virtual machine.
+
+```powershell
+$Env:adminUsername
+$Env:spnClientId
+$Env:spnClientSecret
+$Env:spnTenantId
+$Env:subscriptionId
+$Env:resourceGroup
+$Env:azureLocation
+$Env:workspaceName
+$Env:clusterName
+```
+
+![Screenshot showing environment variables](./img/env_vars.png)
 ## Cleanup
 
 If you want to delete the entire environment, simply delete the deployment resource group from the Azure portal.
