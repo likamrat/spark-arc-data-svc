@@ -64,9 +64,6 @@ By the end of the automated portion of this guide, you will have a vanilla Azure
 
     > **NOTE: It is optional, but highly recommended, to scope the SP to a specific [Azure subscription](https://docs.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest).**
 
-## Azure Region Compatibility
-
-
 ## Automation Flow
 
 For you to get familiar with the automation and deployment flow, below is an explanation.
@@ -95,6 +92,7 @@ Click the <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https
 ![Screenshot showing custom deployment in progress](./img/custom_deployment_progress.png)
 
 ![Screenshot showing custom deployment completed](./img/custom_deployment_completed.png)
+
 ### Deployment Option 2: ARM template with Azure CLI
 
 > **NOTE: Do not use Azure Cloud Shell for this deployment option as it relies on your local public IP address.**
@@ -193,6 +191,7 @@ $Env:clusterName
 ```
 
 ![Screenshot showing environment variables](./img/env_vars.png)
+
 ## Cleanup
 
 If you want to delete the entire environment, simply delete the deployment resource group from the Azure portal.
