@@ -192,9 +192,9 @@ $Env:clusterName
 
 ![Screenshot showing environment variables](./img/env_vars.png)
 
-## Included tools and CLI
+## Included tools and command line interfaces
 
-Installed on the Windows virtual machine are the following tools and command line interfaces:
+Installed on the Windows virtual machine are the following tools and command line interfaces (CLI):
 
 - Azure CLI
 - kubectl
