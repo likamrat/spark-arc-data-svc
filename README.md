@@ -192,6 +192,20 @@ $Env:clusterName
 
 ![Screenshot showing environment variables](./img/env_vars.png)
 
+## Included tools and CLI
+
+Installed on the Windows virtual machine are the following tools and command line interfaces:
+
+- Azure CLI
+- kubectl
+- Helm
+- azdata CLI
+- Azure Data Studio (ADS)
+- SQL Server Management Studio (SSMS)
+- Visual Studio Code
+- SqlQueryStress
+- AZCopy
+
 ## Cleanup
 
 If you want to delete the entire environment, simply delete the deployment resource group from the Azure portal.
