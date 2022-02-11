@@ -59,12 +59,13 @@ Invoke-WebRequest ($templateBaseUrl + "artifacts/DataServicesLogonScript.ps1") -
 Invoke-WebRequest "https://github.com/ErikEJ/SqlQueryStress/releases/download/102/SqlQueryStress.zip" -OutFile "C:\Temp\SqlQueryStress.zip"
 Invoke-WebRequest "https://raw.githubusercontent.com/likamrat/spark-arc-data-svc/main/artifacts/jumpstart_wallpaper.png" -OutFile "C:\Temp\wallpaper.png"
 Invoke-WebRequest "https://azuredatastudio-update.azurewebsites.net/latest/win32-x64-archive/stable" -OutFile "C:\Temp\azuredatastudio.zip"
+Invoke-WebRequest "https://raw.githubusercontent.com/likamrat/spark-arc-data-svc/main/artifacts/DemoCommands.ps1" -OutFile "C:\Temp\DemoCommands.ps1"
 Invoke-WebRequest "https://aka.ms/azdata-msi" -OutFile "C:\Temp\AZDataCLI.msi"
 
 # Installing tools
 workflow ClientTools_01
         {
-            $chocolateyAppList = 'azure-cli,az.powershell,kubernetes-cli,vcredist140,microsoft-edge,azcopy10,vscode,putty.install,kubernetes-helm,grep,ssms,dotnetcore-3.1-sdk,pgadmin4'
+            $chocolateyAppList = 'azure-cli,az.powershell,kubernetes-cli,vcredist140,microsoft-edge,azcopy10,vscode,putty.install,kubernetes-helm,grep,ssms,dotnetcore-3.1-sdk,pgadmin4,vscode-powershell'
             #Run commands in parallel.
             Parallel 
                 {
