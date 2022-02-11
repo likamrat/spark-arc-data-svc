@@ -24,6 +24,10 @@ By the end of the automated portion of this guide, you will have a vanilla Azure
   ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
   ```
 
+    An example SSH public key is shown here. Note that the public key includes "ssh-rsa" at the beginning.
+
+    ![Screenshot showing SSH public key example](./img/ssh_example.png)
+
 - Create Azure service principal (SP). To deploy this scenario, an Azure service principal assigned with multiple RBAC roles is required:
 
   - "Contributor" - Required for provisioning Azure resources
